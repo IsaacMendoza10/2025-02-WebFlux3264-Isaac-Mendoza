@@ -1,26 +1,43 @@
+
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Scanner;
 
 public class App {
-     static String url= "jdbc:mysql://localhost:3306/TestDB";
-     static String userName="root";
-     static String password="Pass_123";
+    private static final String url = "jdbc:mysql://localhost:3306/tallerjdbc";
+    private static final String user = "root";
+    private static final String password = "IsaacMendoza10";
 
-    public static void main(String[] args){
-        try(Connection conn= DriverManager.getConnection(url, userName, password)){
-            PersonaServices personaServices=new PersonaServices();
+    public static void main(String[] args) throws Exception {
 
-            //personaServices.obtenerNumeroPersonas(conn);
-            //personaServices.insertarPersona(conn);
-            //personaServices.actualizarPersona(conn);
-            personaServices.eliminarPersona(conn);
-            //personaServices.insertarPersonaConValores(conn);
-            //personaServices.actualizarPersonaConValores(conn);
-            //personaServices.eliminarPersonaConValores(conn);
-            //personaServices.obtenerPersonasConValores(conn);
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            EstudianteServicio estudianteServicio = new EstudianteServicio();
 
-        } catch(Exception e){
-            System.out.println(e.getMessage());
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("¿Que desea realizar?"
+                    + "\n1. Insertar estudiante"
+                    + "\n2. Actualizar estudiante"
+                    + "\n3. Eliminar estudiante"
+                    + "\n4. Consultar todos los estudiantes"
+                    + "\n5. Consultar estudiante por email"
+                    + "\n6. Salir"
+                    + "\nRespuesta: ");
+
+            byte opcion = scanner.nextByte();
+            switch (opcion) {
+                case 1 -> estudianteServicio.insertarEstudiante(connection);
+                case 2 -> estudianteServicio.actualizarEstudiante(connection);
+                case 3 -> estudianteServicio.eliminarEstudiante(connection);
+                case 4 -> estudianteServicio.consultarEstudiantes(connection);
+                case 5 -> estudianteServicio.consultarEstudiantePorEmail(connection);
+                case 6 -> System.out.println("Saliendo...");
+            }
+
+            scanner.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 }
+    
